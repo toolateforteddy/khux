@@ -1,4 +1,4 @@
-package main
+package khux
 
 import "fmt"
 
@@ -27,10 +27,10 @@ type KeyBlade struct {
 	CalculatedPower float64
 	Buffs           BuffStatus
 
-	name string
+	Name string
 }
 
-var kbs = map[string]KeyBlade{
+var Kbs = map[string]KeyBlade{
 	Starlight: {
 		Level: 25,
 		Slots: []Slot{
@@ -323,11 +323,11 @@ func (k *KeyBlade) Power() float64 {
 }
 
 func (k *KeyBlade) Print() {
-	fmt.Printf("KB: %s@%v\n %v\n", k.name, k.Level, k.CalculatedPower)
+	fmt.Printf("KB: %s@%v\n %v\n", k.Name, k.Level, k.CalculatedPower)
 }
 
-type byPower []KeyBlade
+type ByPower []KeyBlade
 
-func (a byPower) Len() int           { return len(a) }
-func (a byPower) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a byPower) Less(i, j int) bool { return a[i].CalculatedPower > a[j].CalculatedPower }
+func (a ByPower) Len() int           { return len(a) }
+func (a ByPower) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByPower) Less(i, j int) bool { return a[i].CalculatedPower > a[j].CalculatedPower }

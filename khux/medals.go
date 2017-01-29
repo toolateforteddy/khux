@@ -1,14 +1,15 @@
-package main
+package khux
 
 import (
 	"math"
 	"strings"
 )
 
-const medalsfilename = "./medals.json"
+const Medalsfilename = "./medals.json"
+
 const chips = 1000
 const boosted = 1000
-const defaultNumResults = 7
+const DefaultNumResults = 7
 
 type Direction string
 
@@ -62,11 +63,11 @@ type PrintableMedal struct {
 	Cost    int
 }
 
-type byHighDmg []Medal
+type ByHighDmg []Medal
 
-func (a byHighDmg) Len() int           { return len(a) }
-func (a byHighDmg) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a byHighDmg) Less(i, j int) bool { return a[i].CalculatedHighDmg > a[j].CalculatedHighDmg }
+func (a ByHighDmg) Len() int           { return len(a) }
+func (a ByHighDmg) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByHighDmg) Less(i, j int) bool { return a[i].CalculatedHighDmg > a[j].CalculatedHighDmg }
 
 func (m *Medal) Clean() {
 	if m.Mult != 0 {

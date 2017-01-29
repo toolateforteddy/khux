@@ -1,4 +1,4 @@
-package main
+package khux
 
 type AtkDef string
 

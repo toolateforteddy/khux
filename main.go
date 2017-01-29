@@ -6,13 +6,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"sort"
+
+	"./khux"
 )
 
 var (
-	slotNum    = flag.Int("slot", 0, "")
+	slotNum    = flag.Int("slot", 1, "")
 	keyblade   = flag.String("kb", "sl", "")
 	enemyType  = flag.String("enemy", "", "")
-	numResults = flag.Int("num", defaultNumResults, "")
+	numResults = flag.Int("num", khux.DefaultNumResults, "")
 
 	kba = flag.Bool("kba", false, "")
 )
@@ -28,16 +30,16 @@ func main() {
 
 }
 func runKbAnalysis() {
-	for k, v := range kbs {
+	for k, v := range khux.Kbs {
 		v.Power()
-		v.name = k
-		kbs[k] = v
+		v.Name = k
+		khux.Kbs[k] = v
 	}
 
-	blades := []KeyBlade{}
-	GetVals(kbs, &blades)
+	blades := []khux.KeyBlade{}
+	khux.GetVals(khux.Kbs, &blades)
 
-	sort.Sort(byPower(blades))
+	sort.Sort(khux.ByPower(blades))
 
 	for _, k := range blades {
 		k.Print()
@@ -45,20 +47,20 @@ func runKbAnalysis() {
 }
 
 func runMedalAnalysis() {
-	data, err := ioutil.ReadFile(medalsfilename)
-	FatalOnErr(err)
+	data, err := ioutil.ReadFile(khux.Medalsfilename)
+	khux.FatalOnErr(err)
 
-	medals := []Medal{}
+	medals := []khux.Medal{}
 	err = json.Unmarshal(data, &medals)
-	FatalOnErr(err)
+	khux.FatalOnErr(err)
 
-	kb := kbs[*keyblade]
-	kb.Buffs = NewBuffStatus()
+	kb := khux.Kbs[*keyblade]
+	kb.Buffs = khux.NewBuffStatus()
 
 	// Apply iKairi to everything.
-	kb.Buffs.ApplyBuff(&Buff{
-		Type:      General,
-		AtkDef:    Attack,
+	kb.Buffs.ApplyBuff(&khux.Buff{
+		Type:      khux.General,
+		AtkDef:    khux.Attack,
 		NumLevels: 3,
 	})
 	s := kb.Slots[*slotNum-1]
@@ -70,14 +72,14 @@ func runMedalAnalysis() {
 		m.ApplyBuffStatus(kb.Buffs)
 
 		if *enemyType != "" {
-			m.ApplyEnemyTypeAdvantage(Type(*enemyType))
+			m.ApplyEnemyTypeAdvantage(khux.Type(*enemyType))
 		}
 		medals[i] = m
 	}
 
-	sort.Sort(byHighDmg(medals))
+	sort.Sort(khux.ByHighDmg(medals))
 
-	results := make([]PrintableMedal, 0, *numResults)
+	results := make([]khux.PrintableMedal, 0, *numResults)
 	for i, m := range medals {
 		if i >= *numResults {
 			break
